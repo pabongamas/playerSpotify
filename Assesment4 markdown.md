@@ -172,6 +172,8 @@ sensors.show(5)
 we will see this info detailed (tables , with datatypes,records) with the limit of 5 rows
 
 === TRANSACTIONS SCHEMA ===
+
+
 root
  |-- transaction_id: string (nullable = true)
  |-- timestamp: timestamp (nullable = true)
@@ -216,6 +218,7 @@ root
 
 
 === EVENTS SCHEMA ===
+
 root
  |-- event_id: string (nullable = true)
  |-- timestamp: timestamp (nullable = true)
@@ -227,6 +230,7 @@ root
  |-- event_type: string (nullable = true)
  |-- page: string (nullable = true)
  |-- product_id: string (nullable = true)
+
 
 
  +--------+-------------------+----------+-----------+--------+----------+-----------+--------------+---------+----------+
@@ -241,6 +245,7 @@ root
 
 
 === SENSORS SCHEMA ===
+
 root
  |-- reading_id: string (nullable = true)
  |-- timestamp: timestamp (nullable = true)
@@ -250,6 +255,7 @@ root
  |-- value: double (nullable = true)
  |-- unit: string (nullable = true)
  |-- status: string (nullable = true)
+
 
  +----------+-------------------+--------+--------+-----------+-----+-----+------+
 |reading_id|          timestamp|store_id|    zone|sensor_type|value| unit|status|
