@@ -265,3 +265,122 @@ root
 |    R00003|2026-03-06 22:14:00|    S001|entrance|   footfall| 23.0|count|normal|
 |    R00004|2026-03-20 03:43:00|    S001|checkout|   humidity|54.66|    %|normal|
 |    R00005|2026-03-07 22:49:00|    S002|entrance|   humidity|64.79|    %|normal|
+
+
+
+## Block 3 Quality check 
+
+## Data Quality Check 1 — Transactions: sales_amount null or negative
+
+Data Quality Check 1 — Transactions: sales_amount null or negative
+Spark filter applied: sales_amount IS NULL OR sales_amount < 0
+
+Check                                          Result
+Records with null or negative sales_amount         0
+
+Interpretation: All transaction records contain valid sales amounts. No cleaning action required for this field. The dataset is reliable for revenue analysis.
+
+
+
+## Data Quality Check 2 — Web App Events: null product_id by event type
+
+Spark filter applied: product_id IS NULL
+Check                                                    Result
+Total events with null product_id                        3,586
+
+
+# Breakdown by event type:
++----------------+-----+---------------+
+|      event_type|total|with_product_id|
++----------------+-----+---------------+
+|            view| 4161|           4161|
+|          search| 1858|              0|
+|     add_to_cart| 1271|           1271|
+|           login| 1045|              0|
+|  checkout_start|  683|              0|
+|  purchase_click|  573|            573|
+|remove_from_cart|  409|            409|
++----------------+-----+---------------+
+
+
+# Interpretation:
+ The null product_id values are not data errors. 
+ Events such as search, login, and checkout_start are session-level actions not associated with a specific product.
+This is expected behaviour.
+ Events like view, add_to_cart, purchase_click, and remove_from_cart all have complete product references, confirming data integrity where a product link is meaningful.
+
+
+
+###  Business Questions 
+
+## Q1 — Sales Performance by Product Category
+
++-----------+------------------+
+|   category|     total_revenue|
++-----------+------------------+
+|Electronics| 86277.92999999996|
+|  Household| 75384.30000000013|
+|     Pantry|50179.229999999996|
+| Fresh Food| 49810.51999999998|
+|        Pet| 37630.62999999997|
+|     Drinks|19533.349999999995|
+|     Health|14875.399999999972|
+|     Frozen|12475.749999999996|
++-----------+------------------+
+
+# Interpretation: 
+Electronics and Household are the top two revenue-generating categories, together accounting for over 46% of total sales.
+ At the other end, Frozen and Health show significantly lower revenue, which may indicate either low demand, limited product range,
+  or pricing issues that management should investigate further.
+
+## Q2 — Online Customer Behaviour: Event Type Frequency
++----------------+-----+
+|      event_type|count|
++----------------+-----+
+|            view| 4161|
+|          search| 1858|
+|     add_to_cart| 1271|
+|           login| 1045|
+|  checkout_start|  683|
+|  purchase_click|  573|
+|remove_from_cart|  409|
++----------------+-----+
+
+# Interpretation: 
+view is by far the most common event, indicating strong browsing activity. However the conversion funnel shows a significant drop-off: 1,271 customers added items to cart but only 573 completed a purchase click — a conversion rate of roughly 45%.
+The 409 remove_from_cart events also suggest hesitation at the decision stage.
+     This points to an opportunity to improve the checkout experience or introduce targeted promotions to reduce cart abandonment.
+
+
+## Q3 — Store Environment Monitoring: Sensor Anomalies
+
++--------+----------+-----------+------+-----+
+|store_id|      zone|sensor_type|status|count|
++--------+----------+-----------+------+-----+
+|    S001|  checkout|   footfall|  busy|   12|
+|    S001|   storage|  door_open| alert|    8|
+|    S001|  entrance|   footfall|  busy|    8|
+|    S002|  checkout|   footfall|  busy|    7|
+|    S003|   storage|  door_open| alert|    7|
+|    S003|  checkout|   footfall|  busy|    4|
+|    S003|   storage|   humidity| alert|    4|
+|    S002|   storage|  door_open| alert|    4|
+|    S002|fresh_food|temperature| alert|    4|
+|    S002|  checkout|   humidity| alert|    3|
+|    S001|  entrance|   humidity| alert|    3|
+|    S001|   storage|   humidity| alert|    2|
+|    S003|   storage|temperature| alert|    2|
+|    S003|fresh_food|temperature| alert|    2|
+|    S003|  entrance|   footfall|  busy|    2|
+|    S003|  entrance|temperature| alert|    2|
+|    S001|   aisle_2|temperature| alert|    2|
+|    S003|fresh_food|   humidity| alert|    2|
+|    S003|   aisle_1|   humidity| alert|    2|
+|    S001|fresh_food|temperature| alert|    2|
++--------+----------+-----------+------+-----+
+only showing top 20 rows
+
+# Interpretation: 
+Store S001 shows the highest footfall congestion at checkout and entrance zones. 
+Storage door alerts appear across all three stores, indicating a recurring security or refrigeration access issue. 
+Temperature and humidity alerts in the fresh_food zone — particularly in S002 and S003 — are operationally critical as they may affect product quality and food safety compliance. These patterns warrant immediate management review.
