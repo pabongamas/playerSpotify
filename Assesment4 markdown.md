@@ -384,3 +384,19 @@ only showing top 20 rows
 Store S001 shows the highest footfall congestion at checkout and entrance zones. 
 Storage door alerts appear across all three stores, indicating a recurring security or refrigeration access issue. 
 Temperature and humidity alerts in the fresh_food zone — particularly in S002 and S003 — are operationally critical as they may affect product quality and food safety compliance. These patterns warrant immediate management review.
+
+
+## Q4 — Integrated Business Insight
+
+### Connection between Q1 and Q2
+Electronics and Household represent over 46% of total revenue (Q1), yet Q2 shows a 55% cart abandonment rate (1,271 add-to-cart vs 573 purchase clicks). High-value categories left in abandoned carts represent significant recoverable revenue loss.
+
+### Recommended action
+Implement automated abandoned cart reminders via mobile app, prioritising Electronics and Household products with time-limited discount offers.
+
+### Supporting connection: Q1 and Q3
+Frozen and Health are the lowest revenue categories (Q1). Q3 sensor data shows recurring temperature and humidity alerts in fresh_food and storage zones across all stores, suggesting environmental conditions may be affecting product quality and suppressing sales.
+
+### Recommended action
+Establish automated alerts when temperature or humidity sensors exceed safe thresholds, triggering immediate staff response.
+Schedule preventive maintenance on refrigeration systems in S002 and S003.
